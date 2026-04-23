@@ -1,0 +1,65 @@
+.card {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.imagem {
+  background-color: #e8e8e8;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #888;
+  font-size: 14px;
+  border-bottom: 1px solid #ddd;
+}
+
+.info {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.categoria {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.nome {
+  font-size: 15px;
+  color: #222;
+  margin-bottom: 4px;
+}
+
+.detalhe {
+  font-size: 13px;
+  color: #555;
+}
+
+.preco {
+  font-size: 20px;
+  font-weight: bold;
+  color: #1f3a68;
+  margin-top: 8px;
+}
+
+.botao {
+  margin-top: 8px;
+  background-color: #1f3a68;
+  color: white;
+  border: none;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.botao:hover {
+  background-color: #0f2444;
+}

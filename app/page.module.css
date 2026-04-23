@@ -1,0 +1,70 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.banner {
+  background-color: #1f3a68;
+  color: white;
+  padding: 40px;
+  border-radius: 6px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.titulo {
+  font-size: 32px;
+  margin-bottom: 15px;
+}
+
+.subtitulo {
+  font-size: 16px;
+  line-height: 1.5;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.secoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.cardSecao {
+  background-color: white;
+  padding: 25px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.2s;
+}
+
+.cardSecao:hover {
+  border-color: #1f3a68;
+}
+
+.cardSecao h2 {
+  font-size: 22px;
+  color: #1f3a68;
+}
+
+.cardSecao p {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.seta {
+  font-size: 22px;
+  color: #1f3a68;
+  margin-top: 10px;
+}
+
+@media (max-width: 700px) {
+  .secoes {
+    grid-template-columns: 1fr;
+  }
+}

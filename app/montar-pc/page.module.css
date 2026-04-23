@@ -1,0 +1,223 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.titulo {
+  font-size: 26px;
+  color: #1f3a68;
+  margin-bottom: 8px;
+}
+
+.descricao {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 25px;
+  align-items: start;
+}
+
+/* ------- Seletores ------- */
+.selecoes {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.grupo {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.grupoTitulo {
+  font-size: 16px;
+  color: #1f3a68;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.opcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.opcao {
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.opcao:hover {
+  background-color: #eee;
+}
+
+.opcaoAtiva {
+  background-color: #e3edff;
+  border: 2px solid #1f3a68;
+  padding: 9px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.opcaoNome {
+  font-size: 14px;
+  color: #222;
+  font-weight: bold;
+}
+
+.opcaoDetalhe {
+  font-size: 12px;
+  color: #666;
+  margin-top: 3px;
+}
+
+/* ------- Resumo ------- */
+.resumo {
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 20px;
+  position: sticky;
+  top: 20px;
+}
+
+.resumo h2 {
+  font-size: 18px;
+  color: #1f3a68;
+  margin-bottom: 15px;
+}
+
+.listaResumo {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.itemResumo {
+  font-size: 13px;
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemLabel {
+  color: #888;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.itemValor {
+  color: #222;
+  font-size: 13px;
+}
+
+.itemValor em {
+  color: #aaa;
+  font-style: italic;
+}
+
+.consumo {
+  font-size: 13px;
+  color: #555;
+  background-color: #f7f7f7;
+  padding: 8px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-top: 2px solid #1f3a68;
+  margin-top: 5px;
+  font-size: 18px;
+}
+
+.total strong {
+  color: #1f3a68;
+}
+
+/* ------- Erros / Avisos ------- */
+.erros {
+  background-color: #ffe8e8;
+  border: 1px solid #d93025;
+  color: #9a1b13;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+.erros ul,
+.avisos ul {
+  margin-top: 6px;
+  padding-left: 18px;
+}
+
+.erros li,
+.avisos li {
+  margin-bottom: 4px;
+}
+
+.avisos {
+  background-color: #fff6e0;
+  border: 1px solid #e0a800;
+  color: #7a5a00;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 12px;
+  font-size: 13px;
+}
+
+/* ------- Botao final ------- */
+.botaoComprar {
+  width: 100%;
+  background-color: #1f3a68;
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.botaoComprar:hover:not(:disabled) {
+  background-color: #0f2444;
+}
+
+.botaoComprar:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+/* ------- Responsivo ------- */
+@media (max-width: 850px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .resumo {
+    position: static;
+  }
+}
