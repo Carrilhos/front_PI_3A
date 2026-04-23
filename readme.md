@@ -34,3 +34,5 @@ Quando a API `api_flask_pi_3A` tiver os campos necessários
 const res = await fetch("http://localhost:5000/produtos");
 const produtos = await res.json();
 ```
+
+LEIA O ARQUIVO " PENDENCIAS.md "
