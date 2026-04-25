@@ -23,6 +23,7 @@
 .nav {
   display: flex;
   gap: 20px;
+  align-items: center;
 }
 
 .link {
@@ -33,3 +34,225 @@
 .link:hover {
   text-decoration: underline;
 }
+
+/* Link de login com destaque visual */
+.linkLogin {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  padding: 5px 14px;
+  border-radius: 4px;
+  transition: background-color 0.15s;
+}
+
+.linkLogin:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  text-decoration: none;
+}
+
+/* Área exibida quando autenticado */
+.usuarioArea {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.usuarioNome {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.botaoLogout {
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  color: white;
+  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.botaoLogout:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+/* -------- Carrinho -------- */
+.carrinhoWrapper {
+  position: relative;
+}
+
+.botaoCarrinho {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 2px;
+}
+
+.botaoCarrinho:hover {
+  opacity: 0.8;
+}
+
+/* Badge de contagem */
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: #e84040;
+  color: white;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  line-height: 1;
+}
+
+/* Dropdown do carrinho */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  width: 320px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  z-index: 100;
+  padding: 16px;
+  color: #222;
+}
+
+.dropdownTitulo {
+  font-size: 15px;
+  font-weight: bold;
+  color: #1f3a68;
+  margin-bottom: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.vazio {
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+  padding: 12px 0;
+}
+
+/* Lista de itens */
+.listaItens {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+}
+
+.itemCarrinho {
+  border-bottom: 1px dashed #eee;
+  padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.itemInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.itemNome {
+  font-size: 13px;
+  color: #222;
+  flex: 1;
+  line-height: 1.3;
+}
+
+.itemPreco {
+  font-size: 13px;
+  font-weight: bold;
+  color: #1f3a68;
+  white-space: nowrap;
+}
+
+/* Controles de quantidade */
+.itemControles {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btnQtd {
+  width: 24px;
+  height: 24px;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.btnQtd:hover {
+  background-color: #e0e0e0;
+}
+
+.quantidade {
+  font-size: 13px;
+  min-width: 20px;
+  text-align: center;
+  color: #222;
+}
+
+.btnRemover {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: #b00;
+  font-size: 18px;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 2px;
+}
+
+.btnRemover:hover {
+  color: #d93025;
+}
+
+/* Total */
+.totalCarrinho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+  border-top: 2px solid #1f3a68;
+  font-size: 15px;
+  color: #222;
+}
+
+.totalCarrinho strong {
+  color: #1f3a68;
+  font-size: 16px;
+}
+
