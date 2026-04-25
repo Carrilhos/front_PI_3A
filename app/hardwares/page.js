@@ -1,35 +1,45 @@
 "use client";
 
-import { useState } from "react";
-import { todosProdutos } from "@/data/produtos";
+import { useState, useEffect } from "react";
+import { getAnunciosEnriquecidos, getCategorias } from "@/services/api";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import styles from "./page.module.css";
 
 export default function HardwaresPage() {
+  const [anuncios, setAnuncios] = useState([]);
+  const [categorias, setCategorias] = useState([]);
   const [filtro, setFiltro] = useState("Todos");
   const [busca, setBusca] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [erro, setErro] = useState("");
 
-  const categorias = [
-    "Todos",
-    "Processador",
-    "Placa Mãe",
-    "Memória RAM",
-    "Placa de Vídeo",
-    "Fonte",
-    "Armazenamento",
-  ];
+  useEffect(() => {
+    async function carregar() {
+      try {
+        const [dados, cats] = await Promise.all([
+          getAnunciosEnriquecidos(),
+          getCategorias(),
+        ]);
+        setAnuncios(dados);
+        setCategorias(cats);
+      } catch {
+        setErro("Não foi possível carregar os produtos. Tente novamente.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    carregar();
+  }, []);
 
-  let produtosFiltrados = todosProdutos;
+  let filtrados = anuncios;
 
   if (filtro !== "Todos") {
-    produtosFiltrados = produtosFiltrados.filter(
-      (p) => p.categoria === filtro
-    );
+    filtrados = filtrados.filter((a) => a.categoria_nome === filtro);
   }
 
   if (busca.trim() !== "") {
-    produtosFiltrados = produtosFiltrados.filter((p) =>
-      p.nome.toLowerCase().includes(busca.toLowerCase())
+    filtrados = filtrados.filter((a) =>
+      a.titulo.toLowerCase().includes(busca.toLowerCase())
     );
   }
 
@@ -47,26 +57,35 @@ export default function HardwaresPage() {
         />
 
         <div className={styles.categorias}>
+          <button
+            onClick={() => setFiltro("Todos")}
+            className={filtro === "Todos" ? styles.categoriaAtiva : styles.categoriaBtn}
+          >
+            Todos
+          </button>
           {categorias.map((cat) => (
             <button
-              key={cat}
-              onClick={() => setFiltro(cat)}
-              className={
-                filtro === cat ? styles.categoriaAtiva : styles.categoriaBtn
-              }
+              key={cat.id}
+              onClick={() => setFiltro(cat.nome)}
+              className={filtro === cat.nome ? styles.categoriaAtiva : styles.categoriaBtn}
             >
-              {cat}
+              {cat.nome}
             </button>
           ))}
         </div>
       </div>
 
-      {produtosFiltrados.length === 0 ? (
+      {loading && <p className={styles.vazio}>Carregando produtos...</p>}
+      {erro && <p className={styles.vazio}>{erro}</p>}
+
+      {!loading && !erro && filtrados.length === 0 && (
         <p className={styles.vazio}>Nenhum produto encontrado.</p>
-      ) : (
+      )}
+
+      {!loading && !erro && filtrados.length > 0 && (
         <div className={styles.grid}>
-          {produtosFiltrados.map((produto) => (
-            <ProductCard key={produto.id} produto={produto} />
+          {filtrados.map((anuncio) => (
+            <ProductCard key={anuncio.id_anuncio} anuncio={anuncio} />
           ))}
         </div>
       )}

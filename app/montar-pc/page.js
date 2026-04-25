@@ -1,147 +1,170 @@
 "use client";
 
-import { useState } from "react";
-import {
-  processadores,
-  placasMae,
-  memorias,
-  placasVideo,
-  fontes,
-  armazenamentos,
-} from "@/data/produtos";
+import { useState, useEffect } from "react";
+import { getAnunciosEnriquecidos, getAnuncioDetalhes } from "@/services/api";
+import { useCart } from "@/contexts/CartContext";
 import styles from "./page.module.css";
 
+// Mapeamento de nome de categoria → chave interna do build
+const ROLE_MAP = {
+  "Processador (CPU)": "cpu",
+  "Placa-mãe": "mobo",
+  "Memória RAM": "ram",
+  "Placa de Vídeo (GPU)": "gpu",
+  "Fonte de Alimentação": "psu",
+  "Armazenamento": "ssd",
+};
+
+const ROLE_LABELS = {
+  cpu: "1. Processador",
+  mobo: "2. Placa Mãe",
+  ram: "3. Memória RAM",
+  gpu: "4. Placa de Vídeo",
+  psu: "5. Fonte",
+  ssd: "6. Armazenamento",
+};
+
+// Flatten [{socket: "AM5"}, {tdp: 105}] → {socket: "AM5", tdp: 105}
+function flattenAtributos(atributos = []) {
+  return atributos.reduce((obj, a) => ({ ...obj, ...a }), {});
+}
+
 export default function MontarPcPage() {
-  // Cada peca que o usuario selecionou
-  const [cpu, setCpu] = useState(null);
-  const [placaMae, setPlacaMae] = useState(null);
-  const [ram, setRam] = useState(null);
-  const [gpu, setGpu] = useState(null);
-  const [fonte, setFonte] = useState(null);
-  const [ssd, setSsd] = useState(null);
+  const { addItem } = useCart();
+  const [grupos, setGrupos] = useState({});
+  const [loading, setLoading] = useState(true);
+  // build: { cpu: {anuncio, attrs}, mobo: {...}, ... }
+  const [build, setBuild] = useState({});
+  const [loadingPeca, setLoadingPeca] = useState(null);
 
-  // ------- VALIDACOES DE COMPATIBILIDADE -------
+  useEffect(() => {
+    getAnunciosEnriquecidos()
+      .then((anuncios) => {
+        const g = {};
+        for (const a of anuncios) {
+          const role = ROLE_MAP[a.categoria_nome];
+          if (!role) continue;
+          if (!g[role]) g[role] = [];
+          g[role].push(a);
+        }
+        setGrupos(g);
+      })
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  }, []);
 
+  async function handleSelecionar(role, anuncio) {
+    if (build[role]?.anuncio?.id_anuncio === anuncio.id_anuncio) {
+      setBuild((prev) => { const next = { ...prev }; delete next[role]; return next; });
+      return;
+    }
+    setLoadingPeca(anuncio.id_anuncio);
+    try {
+      const detalhes = await getAnuncioDetalhes(anuncio.id_anuncio);
+      const attrs = flattenAtributos(detalhes.atributos);
+      setBuild((prev) => ({ ...prev, [role]: { anuncio, attrs } }));
+    } catch {
+      setBuild((prev) => ({ ...prev, [role]: { anuncio, attrs: {} } }));
+    } finally {
+      setLoadingPeca(null);
+    }
+  }
+
+  // --- Validações ---
   const erros = [];
   const avisos = [];
 
-  // 1) CPU e placa-mae precisam ter o mesmo socket
-  if (cpu && placaMae && cpu.socket !== placaMae.socket) {
-    erros.push(
-      `Socket incompatível: o processador é ${cpu.socket} e a placa-mãe é ${placaMae.socket}.`
-    );
+  const cpu = build.cpu?.attrs;
+  const mobo = build.mobo?.attrs;
+  const ram = build.ram?.attrs;
+  const gpu = build.gpu?.attrs;
+  const psu = build.psu?.attrs;
+
+  if (cpu && mobo && cpu.socket && mobo.socket && cpu.socket !== mobo.socket) {
+    erros.push(`Socket incompatível: CPU é ${cpu.socket}, Placa Mãe é ${mobo.socket}.`);
   }
 
-  // 2) RAM precisa ser do mesmo tipo que a placa-mae suporta
-  if (ram && placaMae && ram.tipo !== placaMae.tipoRam) {
-    erros.push(
-      `Memória incompatível: a placa-mãe usa ${placaMae.tipoRam}, mas você escolheu ${ram.tipo}.`
-    );
+  const ramTipo = ram?.tipo || ram?.tipo_ram;
+  const moboRam = mobo?.tipo_ram || mobo?.tipoRam;
+  if (ram && mobo && ramTipo && moboRam && ramTipo !== moboRam) {
+    erros.push(`Memória incompatível: placa-mãe usa ${moboRam}, RAM é ${ramTipo}.`);
   }
 
-  // 3) Fonte precisa aguentar o consumo total (com margem de seguranca de 20%)
   const consumoTotal =
-    (cpu?.tdp || 0) +
-    (gpu?.tdp || 0) +
-    (ram?.watts || 0) +
-    (ssd?.watts || 0);
+    (Number(cpu?.tdp) || 0) +
+    (Number(gpu?.tdp) || 0) +
+    (Number(ram?.watts) || 0);
 
   const consumoRecomendado = Math.ceil(consumoTotal * 1.2);
+  const wattsFont = Number(psu?.watts) || 0;
 
-  if (fonte && consumoTotal > 0 && fonte.watts < consumoRecomendado) {
-    erros.push(
-      `Fonte fraca: a build precisa de pelo menos ${consumoRecomendado}W (consumo ${consumoTotal}W + 20% de margem), mas sua fonte tem só ${fonte.watts}W.`
-    );
+  if (psu && consumoTotal > 0 && wattsFont < consumoRecomendado) {
+    erros.push(`Fonte fraca: build precisa de ${consumoRecomendado}W, sua fonte tem ${wattsFont}W.`);
   }
 
-  if (
-    fonte &&
-    consumoTotal > 0 &&
-    fonte.watts >= consumoRecomendado &&
-    fonte.watts < consumoTotal * 1.5
-  ) {
-    avisos.push(
-      "Fonte passa no mínimo, mas se você pretende fazer upgrade depois, considere uma maior."
-    );
+  if (psu && consumoTotal > 0 && wattsFont >= consumoRecomendado && wattsFont < consumoTotal * 1.5) {
+    avisos.push("Fonte no limite mínimo. Considere uma maior para upgrades futuros.");
   }
 
-  // ------- TOTAL -------
-  const pecasSelecionadas = [cpu, placaMae, ram, gpu, fonte, ssd].filter(Boolean);
-  const precoTotal = pecasSelecionadas.reduce((acc, p) => acc + p.preco, 0);
+  const pecasSelecionadas = Object.values(build);
+  const precoTotal = pecasSelecionadas.reduce((acc, p) => acc + parseFloat(p.anuncio.preco), 0);
+  const buildCompleta = Object.keys(ROLE_LABELS).every((r) => build[r]) && erros.length === 0;
 
-  const buildCompleta =
-    cpu && placaMae && ram && gpu && fonte && ssd && erros.length === 0;
+  function handleFinalizarCompra() {
+    for (const { anuncio } of pecasSelecionadas) {
+      addItem({
+        id_anuncio: anuncio.id_anuncio,
+        titulo: anuncio.titulo,
+        preco: parseFloat(anuncio.preco),
+        imagem: anuncio.imagem_principal,
+      });
+    }
+  }
 
-  // ------- RENDER -------
+  if (loading) return (
+    <div className={styles.container}>
+      <p style={{ color: "#888", textAlign: "center", paddingTop: 60 }}>Carregando peças...</p>
+    </div>
+  );
+
   return (
     <div className={styles.container}>
       <h1 className={styles.titulo}>Monte o seu PC</h1>
       <p className={styles.descricao}>
-        Escolha cada peça e o sistema verifica a compatibilidade (socket,
-        memória e fonte de alimentação).
+        Escolha cada peça e o sistema verifica a compatibilidade (socket, memória e fonte).
       </p>
 
       <div className={styles.layout}>
         <div className={styles.selecoes}>
-          <Seletor
-            titulo="1. Processador"
-            itens={processadores}
-            selecionado={cpu}
-            onChange={setCpu}
-          />
-
-          <Seletor
-            titulo="2. Placa Mãe"
-            itens={placasMae}
-            selecionado={placaMae}
-            onChange={setPlacaMae}
-          />
-
-          <Seletor
-            titulo="3. Memória RAM"
-            itens={memorias}
-            selecionado={ram}
-            onChange={setRam}
-          />
-
-          <Seletor
-            titulo="4. Placa de Vídeo"
-            itens={placasVideo}
-            selecionado={gpu}
-            onChange={setGpu}
-          />
-
-          <Seletor
-            titulo="5. Fonte"
-            itens={fontes}
-            selecionado={fonte}
-            onChange={setFonte}
-          />
-
-          <Seletor
-            titulo="6. Armazenamento"
-            itens={armazenamentos}
-            selecionado={ssd}
-            onChange={setSsd}
-          />
+          {Object.entries(ROLE_LABELS).map(([role, titulo]) => (
+            <Seletor
+              key={role}
+              titulo={titulo}
+              itens={grupos[role] || []}
+              selecionado={build[role]?.anuncio}
+              loadingId={loadingPeca}
+              onSelecionar={(a) => handleSelecionar(role, a)}
+            />
+          ))}
         </div>
 
         <aside className={styles.resumo}>
           <h2>Sua build</h2>
 
           <ul className={styles.listaResumo}>
-            <ItemResumo label="Processador" item={cpu} />
-            <ItemResumo label="Placa Mãe" item={placaMae} />
-            <ItemResumo label="Memória RAM" item={ram} />
-            <ItemResumo label="Placa de Vídeo" item={gpu} />
-            <ItemResumo label="Fonte" item={fonte} />
-            <ItemResumo label="Armazenamento" item={ssd} />
+            {Object.entries(ROLE_LABELS).map(([role, label]) => (
+              <ItemResumo
+                key={role}
+                label={label.replace(/^\d+\. /, "")}
+                item={build[role]?.anuncio}
+              />
+            ))}
           </ul>
 
           {consumoTotal > 0 && (
             <p className={styles.consumo}>
-              Consumo estimado: <strong>{consumoTotal}W</strong> (recomendado:{" "}
-              {consumoRecomendado}W)
+              Consumo estimado: <strong>{consumoTotal}W</strong>{" "}
+              (recomendado: {consumoRecomendado}W)
             </p>
           )}
 
@@ -153,32 +176,23 @@ export default function MontarPcPage() {
           {erros.length > 0 && (
             <div className={styles.erros}>
               <strong>Problemas encontrados:</strong>
-              <ul>
-                {erros.map((e, i) => (
-                  <li key={i}>{e}</li>
-                ))}
-              </ul>
+              <ul>{erros.map((e, i) => <li key={i}>{e}</li>)}</ul>
             </div>
           )}
 
           {avisos.length > 0 && (
             <div className={styles.avisos}>
               <strong>Atenção:</strong>
-              <ul>
-                {avisos.map((a, i) => (
-                  <li key={i}>{a}</li>
-                ))}
-              </ul>
+              <ul>{avisos.map((a, i) => <li key={i}>{a}</li>)}</ul>
             </div>
           )}
 
           <button
             className={styles.botaoComprar}
             disabled={!buildCompleta}
+            onClick={buildCompleta ? handleFinalizarCompra : undefined}
           >
-            {buildCompleta
-              ? "Finalizar compra"
-              : "Selecione todas as peças compatíveis"}
+            {buildCompleta ? "Adicionar tudo ao carrinho" : "Selecione todas as peças compatíveis"}
           </button>
         </aside>
       </div>
@@ -186,36 +200,36 @@ export default function MontarPcPage() {
   );
 }
 
-// ------- Componentes auxiliares -------
-
-function Seletor({ titulo, itens, selecionado, onChange }) {
+function Seletor({ titulo, itens, selecionado, loadingId, onSelecionar }) {
   return (
     <div className={styles.grupo}>
       <h3 className={styles.grupoTitulo}>{titulo}</h3>
-      <div className={styles.opcoes}>
-        {itens.map((item) => {
-          const ativo = selecionado?.id === item.id;
-          return (
-            <button
-              key={item.id}
-              onClick={() => onChange(ativo ? null : item)}
-              className={ativo ? styles.opcaoAtiva : styles.opcao}
-            >
-              <div>
-                <p className={styles.opcaoNome}>{item.nome}</p>
-                <p className={styles.opcaoDetalhe}>
-                  {item.socket && `Socket ${item.socket} · `}
-                  {item.tipo && `${item.tipo} · `}
-                  {item.tipoRam && `Mem. ${item.tipoRam} · `}
-                  {item.tdp && `${item.tdp}W TDP · `}
-                  {item.categoria === "Fonte" && `${item.watts}W · `}
-                  R$ {item.preco.toFixed(2).replace(".", ",")}
-                </p>
-              </div>
-            </button>
-          );
-        })}
-      </div>
+      {itens.length === 0 ? (
+        <p style={{ color: "#aaa", fontSize: 13 }}>Nenhuma peça disponível.</p>
+      ) : (
+        <div className={styles.opcoes}>
+          {itens.map((item) => {
+            const ativo = selecionado?.id_anuncio === item.id_anuncio;
+            const carregando = loadingId === item.id_anuncio;
+            return (
+              <button
+                key={item.id_anuncio}
+                onClick={() => onSelecionar(item)}
+                className={ativo ? styles.opcaoAtiva : styles.opcao}
+                disabled={carregando}
+              >
+                <div>
+                  <p className={styles.opcaoNome}>{item.produto?.nome || item.titulo}</p>
+                  <p className={styles.opcaoDetalhe}>
+                    R$ {parseFloat(item.preco).toFixed(2).replace(".", ",")}
+                    {carregando && " — carregando..."}
+                  </p>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -225,7 +239,7 @@ function ItemResumo({ label, item }) {
     <li className={styles.itemResumo}>
       <span className={styles.itemLabel}>{label}:</span>
       <span className={styles.itemValor}>
-        {item ? item.nome : <em>não selecionado</em>}
+        {item ? (item.produto?.nome || item.titulo) : <em>não selecionado</em>}
       </span>
     </li>
   );

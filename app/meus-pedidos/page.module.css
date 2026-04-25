@@ -1,0 +1,146 @@
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 80px;
+  color: #888;
+}
+
+.titulo {
+  font-size: 26px;
+  color: #1f3a68;
+  margin-bottom: 28px;
+}
+
+.vazio {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  color: #666;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.pedidoId {
+  font-weight: 700;
+  font-size: 15px;
+  color: #1f3a68;
+}
+
+.data {
+  font-size: 13px;
+  color: #888;
+  margin-left: 12px;
+}
+
+.status {
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.statusPendente {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.statusAprovado {
+  background: #d1ecf1;
+  color: #0c5460;
+}
+
+.statusEnviado {
+  background: #cce5ff;
+  color: #004085;
+}
+
+.statusEntregue {
+  background: #d4edda;
+  color: #155724;
+}
+
+.statusCancelado {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.itens {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 6px;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #444;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.endereco {
+  font-size: 13px;
+  color: #666;
+}
+
+.total {
+  font-size: 15px;
+  color: #1a1a1a;
+}
+
+.btnCancelar {
+  background: none;
+  border: 1px solid #e74c3c;
+  color: #e74c3c;
+  padding: 7px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  align-self: flex-start;
+}
+
+.btnCancelar:hover:not(:disabled) {
+  background: #fdf0ef;
+}
+
+.btnCancelar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
