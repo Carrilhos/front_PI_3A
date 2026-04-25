@@ -1,89 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { todosProdutos } from "@/data/produtos";
 import ProductCard from "@/components/ProductCard/ProductCard";
 import styles from "./page.module.css";
 
 export default function HardwaresPage() {
-  const [anuncios, setAnuncios] = useState([]);
-  const [categorias, setCategorias] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
+  const [filtro, setFiltro] = useState("Todos");
   const [busca, setBusca] = useState("");
-  const [buscaDebounced, setBuscaDebounced] = useState("");
-  const [categoriaSelecionada, setCategoriaSelecionada] = useState("Todos");
 
-  // Fetch initial data
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:5000";
-        
-        const [resAnuncios, resCategorias] = await Promise.all([
-          fetch(`${baseUrl}/anuncios`),
-          fetch(`${baseUrl}/categorias`)
-        ]);
+  const categorias = [
+    "Todos",
+    "Processador",
+    "Placa Mãe",
+    "Memória RAM",
+    "Placa de Vídeo",
+    "Fonte",
+    "Armazenamento",
+  ];
 
-        if (!resAnuncios.ok) throw new Error("Erro ao carregar os anúncios.");
-        if (!resCategorias.ok) throw new Error("Erro ao carregar as categorias.");
+  let produtosFiltrados = todosProdutos;
 
-        const [dataAnuncios, dataCategorias] = await Promise.all([
-          resAnuncios.json(),
-          resCategorias.json()
-        ]);
+  if (filtro !== "Todos") {
+    produtosFiltrados = produtosFiltrados.filter(
+      (p) => p.categoria === filtro
+    );
+  }
 
-        setAnuncios(dataAnuncios);
-        setCategorias(dataCategorias);
-      } catch (err) {
-        console.error(err);
-        setError("Não foi possível carregar os dados. Tente novamente mais tarde.");
-        setTimeout(() => setError(null), 5000);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchData();
-  }, []);
-
-  // Debounce effect
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setBuscaDebounced(busca);
-    }, 400); // 400ms debounce
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [busca]);
-
-  // Filtro combinado (local)
-  const anunciosFiltrados = anuncios.filter((anuncio) => {
-    // Verifica categoria
-    // API das categorias tem `id`. Vamos assumir que o anúncio tenha `id_categoria`
-    // Se a API tiver `id_categoria` no anuncio, checamos contra o id.
-    const matchCategoria = 
-      categoriaSelecionada === "Todos" || 
-      anuncio.id_categoria === categoriaSelecionada;
-
-    // Verifica busca (titulo | marca | modelo | descricao)
-    const termo = buscaDebounced.toLowerCase();
-    const matchBusca = termo === "" || [
-      anuncio.titulo,
-      anuncio.marca,
-      anuncio.modelo,
-      anuncio.descricao
-    ].some((campo) => campo && String(campo).toLowerCase().includes(termo));
-
-    return matchCategoria && matchBusca;
-  });
+  if (busca.trim() !== "") {
+    produtosFiltrados = produtosFiltrados.filter((p) =>
+      p.nome.toLowerCase().includes(busca.toLowerCase())
+    );
+  }
 
   return (
     <div className={styles.container}>
       <h1 className={styles.titulo}>Todos os Hardwares</h1>
 
-      <div className={styles.headerFiltros}>
+      <div className={styles.controles}>
         <input
           type="text"
           placeholder="Buscar por nome..."
@@ -92,44 +46,27 @@ export default function HardwaresPage() {
           className={styles.busca}
         />
 
-        <div className={styles.categoriasScroll}>
-          <button
-            onClick={() => setCategoriaSelecionada("Todos")}
-            className={categoriaSelecionada === "Todos" ? styles.categoriaAtiva : styles.categoriaBtn}
-          >
-            Todos
-          </button>
-          
+        <div className={styles.categorias}>
           {categorias.map((cat) => (
             <button
-              key={cat.id}
-              onClick={() => setCategoriaSelecionada(cat.id)}
-              className={categoriaSelecionada === cat.id ? styles.categoriaAtiva : styles.categoriaBtn}
+              key={cat}
+              onClick={() => setFiltro(cat)}
+              className={
+                filtro === cat ? styles.categoriaAtiva : styles.categoriaBtn
+              }
             >
-              {cat.nome}
+              {cat}
             </button>
           ))}
         </div>
       </div>
 
-      {error && (
-        <div className={styles.toastError}>
-          <span>{error}</span>
-          <button onClick={() => setError(null)}>×</button>
-        </div>
-      )}
-
-      {loading ? (
-        <div className={styles.loadingContainer}>
-          <div className={styles.spinner}></div>
-          <p>Carregando produtos...</p>
-        </div>
-      ) : anunciosFiltrados.length === 0 ? (
-        <p className={styles.vazio}>Nenhum produto encontrado com os filtros atuais.</p>
+      {produtosFiltrados.length === 0 ? (
+        <p className={styles.vazio}>Nenhum produto encontrado.</p>
       ) : (
         <div className={styles.grid}>
-          {anunciosFiltrados.map((anuncio) => (
-            <ProductCard key={anuncio.id_anuncio} produto={anuncio} />
+          {produtosFiltrados.map((produto) => (
+            <ProductCard key={produto.id} produto={produto} />
           ))}
         </div>
       )}
