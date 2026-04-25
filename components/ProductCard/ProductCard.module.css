@@ -5,52 +5,66 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.linkImagem {
+  display: block;
 }
 
 .imagem {
   background-color: #e8e8e8;
-  height: 140px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #888;
-  font-size: 14px;
   border-bottom: 1px solid #ddd;
+  overflow: hidden;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 8px;
+}
+
+.semImagem {
+  color: #aaa;
+  font-size: 13px;
 }
 
 .info {
   padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-}
-
-.categoria {
-  font-size: 11px;
-  color: #888;
-  text-transform: uppercase;
+  gap: 6px;
+  flex: 1;
 }
 
 .nome {
-  font-size: 15px;
+  font-size: 14px;
   color: #222;
-  margin-bottom: 4px;
-}
-
-.detalhe {
-  font-size: 13px;
-  color: #555;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .preco {
   font-size: 20px;
   font-weight: bold;
   color: #1f3a68;
-  margin-top: 8px;
+  margin-top: auto;
 }
 
 .botao {
-  margin-top: 8px;
+  margin-top: 6px;
   background-color: #1f3a68;
   color: white;
   border: none;
@@ -58,8 +72,27 @@
   font-size: 14px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
 .botao:hover {
   background-color: #0f2444;
+}
+
+.botaoOk {
+  margin-top: 6px;
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: default;
+}
+
+.semEstoque {
+  font-size: 13px;
+  color: #e74c3c;
+  text-align: center;
+  margin-top: 6px;
 }

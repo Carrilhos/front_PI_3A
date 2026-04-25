@@ -12,17 +12,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 20px;
 }
 
 .logo {
   font-size: 22px;
   font-weight: bold;
   color: white;
+  white-space: nowrap;
 }
 
 .nav {
   display: flex;
   gap: 20px;
+  flex: 1;
 }
 
 .link {
@@ -32,4 +35,72 @@
 
 .link:hover {
   text-decoration: underline;
+}
+
+.acoes {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.carrinho {
+  color: white;
+  font-size: 20px;
+  position: relative;
+  text-decoration: none;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  font-size: 11px;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btnSair {
+  background: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btnSair:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.auth {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btnCadastro {
+  background: white;
+  color: #1f3a68;
+  padding: 5px 12px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btnCadastro:hover {
+  background: #e8edf5;
 }

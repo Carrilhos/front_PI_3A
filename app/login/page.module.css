@@ -1,0 +1,93 @@
+.container {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: #f5f7fa;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.titulo {
+  font-size: 26px;
+  font-weight: 700;
+  color: #1f3a68;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #1f3a68;
+}
+
+.erro {
+  color: #e74c3c;
+  font-size: 14px;
+  margin: 0;
+}
+
+.btn {
+  background: #1f3a68;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.btn:hover:not(:disabled) {
+  background: #162d52;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.rodape {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #555;
+}
+
+.link {
+  color: #1f3a68;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

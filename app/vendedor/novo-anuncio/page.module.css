@@ -1,0 +1,123 @@
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 80px;
+  color: #888;
+}
+
+.voltar {
+  background: none;
+  border: none;
+  color: #1f3a68;
+  font-size: 15px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.voltar:hover {
+  text-decoration: underline;
+}
+
+.titulo {
+  font-size: 26px;
+  color: #1f3a68;
+  margin-bottom: 28px;
+}
+
+.form {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.input {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+  background: white;
+}
+
+.input:focus {
+  border-color: #1f3a68;
+}
+
+.textarea {
+  padding: 10px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 15px;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.textarea:focus {
+  border-color: #1f3a68;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inputFile {
+  font-size: 14px;
+}
+
+.principalSelect {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.erro {
+  color: #e74c3c;
+  font-size: 14px;
+  margin: 0;
+}
+
+.btn {
+  background: #1f3a68;
+  color: white;
+  border: none;
+  padding: 13px;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.btn:hover:not(:disabled) {
+  background: #162d52;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
