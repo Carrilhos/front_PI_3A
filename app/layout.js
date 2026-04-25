@@ -1,4 +1,6 @@
 import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+import { CarrinhoProvider } from "@/context/CarrinhoContext";
 import Header from "@/components/Header/Header";
 
 export const metadata = {
@@ -10,8 +12,12 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-BR">
       <body>
-        <Header />
-        <main>{children}</main>
+        <AuthProvider>
+          <CarrinhoProvider>
+            <Header />
+            <main>{children}</main>
+          </CarrinhoProvider>
+        </AuthProvider>
       </body>
     </html>
   );

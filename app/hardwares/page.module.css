@@ -10,53 +10,118 @@
   margin-bottom: 20px;
 }
 
-.controles {
+.headerFiltros {
   background-color: white;
-  padding: 15px;
-  border-radius: 6px;
+  padding: 16px;
+  border-radius: 8px;
   border: 1px solid #ddd;
-  margin-bottom: 25px;
+  margin-bottom: 24px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .busca {
-  padding: 10px;
-  font-size: 14px;
+  padding: 12px 16px;
+  font-size: 15px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 6px;
   width: 100%;
+  outline: none;
+  transition: border-color 0.2s;
 }
 
-.categorias {
+.busca:focus {
+  border-color: #1f3a68;
+}
+
+.categoriasScroll {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin; /* Firefox */
+}
+
+.categoriasScroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.categoriasScroll::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 3px;
 }
 
 .categoriaBtn {
-  background-color: #eee;
-  border: 1px solid #ccc;
-  padding: 7px 14px;
-  font-size: 13px;
-  border-radius: 4px;
+  background-color: #f1f1f1;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 20px;
   cursor: pointer;
-  color: #333;
+  color: #444;
+  white-space: nowrap;
+  transition: all 0.2s;
 }
 
 .categoriaBtn:hover {
-  background-color: #ddd;
+  background-color: #e4e4e4;
 }
 
 .categoriaAtiva {
   background-color: #1f3a68;
   color: white;
   border: 1px solid #1f3a68;
-  padding: 7px 14px;
-  font-size: 13px;
+  padding: 8px 16px;
+  font-size: 14px;
+  border-radius: 20px;
+  cursor: default;
+  white-space: nowrap;
+}
+
+.toastError {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 12px 16px;
   border-radius: 4px;
+  border: 1px solid #f5c6cb;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.toastError button {
+  background: none;
+  border: none;
+  color: #721c24;
+  font-size: 20px;
   cursor: pointer;
+  line-height: 1;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px;
+  color: #555;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #1f3a68;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .grid {
